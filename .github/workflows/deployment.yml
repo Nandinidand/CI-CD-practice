@@ -1,0 +1,33 @@
+name: Build
+on: workflow_dispatch
+jobs:
+  chekout:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: checkout stage
+        run: echo "code cloning done"
+  notification:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: notification stage
+        run: echo "notification sent to email & slack"
+  sonar-analysis:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: static code analysis
+        run: echo "code analysis done"
+  build:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: build stage
+        run: echo "docker build done"
+  deploy:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: build stage
+        run: echo "deployment done"
+  feedback:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: sending feedback
+        run: echo "feedback sent to slack"
