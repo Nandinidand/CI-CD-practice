@@ -21,6 +21,11 @@ jobs:
     steps:
       - name: build stage
         run: echo "docker build done"
+  approval:
+    runs-on: ubuntu-latest    
+    steps:
+      - name: approval stage
+        run: echo "approval given"
   deploy:
     runs-on: ubuntu-latest    
     steps:
