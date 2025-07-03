@@ -1,5 +1,7 @@
 name: ci-cd pipeline
-on: workflow_dispatch
+on: 
+  - push
+  - workflow_dispatch
 jobs:
   slack-notification:
     runs-on: ubuntu-latest
