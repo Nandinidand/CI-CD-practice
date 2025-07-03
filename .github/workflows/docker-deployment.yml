@@ -31,10 +31,12 @@ jobs:
     needs: build
     runs-on: self-hosted
     steps: 
+      - name: remove old deployments
+        run: docker container rm -f edify
       - name: pull the docker image
         run: docker pull ${{ vars.DOCKER_USERNAME }}/edify-app:latest
       - name: Run container
-        run: docker container run -dt --name edify -p 80:80 ${{ vars.DOCKER_USERNAME }}/edify-app:latest
+        run: docker container run -dt --name edify -p 8080:80 ${{ vars.DOCKER_USERNAME }}/edify-app:latest
       - name: list the container
         run: docker container ls -a
   feedback:
