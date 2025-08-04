@@ -1,0 +1,51 @@
+name: java app
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.14.1
+        with:
+          java-version: 17
+          distribution: temurin
+      - name: Extract Tag from pom.xml
+        id: version
+        run: |
+          version: 
+          echo "version: " > $GITHUB_OUPUT
+      - name: docker login
+        uses: docker/login-action@v3.4.0
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          registry: ${{ vars.DOCKERHUB_REPO }}
+      - name: docker build
+        run: |
+          docker build -t ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPO }}:${{ steps.ouput.version }} .
+          docker push ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPO }}:tag
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - name: install docker
+        run: |
+          curl -fsSL https://get.docker.com -o install-docker.sh
+          sudo sh install-docker.sh
+          sudo usermod -aG docker $USER
+          newgrp docker  # refresh the docker group to use docker cmd by user
+          echo "docker installed"
+      - name: docker login
+        uses: docker/login-action@v3.4.0
+        with:
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          registry: ${{ vars.DOCKERHUB_REPO }}
+      - name: pull image and run container
+        run: |
+          docker pull ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPO }}:tag
+          docker container run -dt --name c1 --restart=always -p 8080:8080 ${{ vars.DOCKERHUB_USERNAME }}/${{ vars.DOCKERHUB_REPO }}:tag
+    
+   
