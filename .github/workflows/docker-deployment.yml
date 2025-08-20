@@ -1,6 +1,5 @@
 name: ci-cd pipeline
 on: 
-  - push
   - workflow_dispatch
 jobs:
   slack-notification:
