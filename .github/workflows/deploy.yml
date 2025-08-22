@@ -19,7 +19,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: deploy
+    runs-on: ubuntu_latest
     steps:
       - name: pull image
         run: docker pull ${{ vars.DOCKER_USERNAME }}/mk-edify:latest 
