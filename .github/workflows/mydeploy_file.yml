@@ -8,6 +8,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Prepare nginx content
+        run: |
+          mkdir -p ./nginx-html
+          rm -rf ./nginx-html/*
+          cp -r ./build/* ./nginx-html/
 
       - name: Build Docker image
         run: docker build -t ${{ vars.DOCKER_USERNAME }}/mk-edify:latest .
