@@ -1,0 +1,28 @@
+name: edify docker deployment
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: clone the code
+      uses: actions/checkout@v5.0.0
+    - name: build docker image
+      run: docker build -t ${{ vars.DOCKER_USERNAME }}/nandini123:latest
+    - name: docker login
+      uses: docker/login-action@v3.5.0
+      with:
+        username: ${{ vars.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_USERNAME }}
+    - name: push docker image
+      run: docker push {{var.DOCKER_USERNAME }}/nandini123:latest
+  deploy:
+    needs: build
+    runs-on: deploy
+    steps:
+      - name: pull image
+        run: docker pull ${{ vars.DOCKER_USERNAME }}/nandini123:latest
+      - name: run container
+        run: docker containerrun -dt --name edify -p 80:80 ${{ vars.DOCKER_USERNAME}}/nandini123:latest
+      - name: list containers
+        run: docker container ls -a  
+  
