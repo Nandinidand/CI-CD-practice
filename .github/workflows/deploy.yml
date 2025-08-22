@@ -1,4 +1,4 @@
-name: edify docker deployment
+name: Edify Docker Deployment
 on: workflow_dispatch
 jobs:
   build:
@@ -15,17 +15,17 @@ jobs:
         username: ${{ vars.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: push docker image
-      run: docker push {{var.DOCKER_USERNAME }}/mk-edify:latest .
+      run: docker push {{vars.DOCKER_USERNAME }}/mk-edify:latest 
 
   deploy:
     needs: build
     runs-on: deploy
     steps:
       - name: pull image
-        run: docker pull ${{ vars.DOCKER_USERNAME }}/mk-edify:latest .
+        run: docker pull ${{ vars.DOCKER_USERNAME }}/mk-edify:latest 
         
       - name: run container
-        run: docker containerrun -dt --name edify -p 80:80 ${{ vars.DOCKER_USERNAME}}/mk-edify:latest .
+        run: docker container run -dt --name edify -p 80:80 ${{ vars.DOCKER_USERNAME}}/mk-edify:latest 
 
       - name: list containers
         run: docker container ls -a  
